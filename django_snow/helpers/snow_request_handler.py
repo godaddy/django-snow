@@ -6,6 +6,7 @@ from django.conf import settings
 from ..models import ChangeRequest
 from .exceptions import ChangeRequestException
 
+
 logger = logging.getLogger('django_snow')
 
 

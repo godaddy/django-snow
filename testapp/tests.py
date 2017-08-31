@@ -1,11 +1,16 @@
 import uuid
-from unittest import mock
 
 from django.test import TestCase, override_settings
 
 from django_snow.helpers import ChangeRequestHandler
 from django_snow.helpers.exceptions import ChangeRequestException
 from django_snow.models import ChangeRequest
+
+
+try:
+    from unittest import mock
+except ImportError:
+    import mock
 
 
 @override_settings(
