@@ -1,6 +1,18 @@
 django-snow
 =================
 
+.. image:: https://img.shields.io/pypi/v/django-snow.svg
+   :target: https://pypi.python.org/pypi/django-snow
+   :alt: Latest Version
+
+.. image:: https://travis-ci.org/godaddy/django-snow.svg?branch=master
+   :target: https://travis-ci.org/godaddy/django-snow
+   :alt: Test/build status
+
+.. image:: https://codecov.io/gh/godaddy/django-snow/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/godaddy/django-snow
+   :alt: Code coverage
+
 **django-snow** is a django app to manage ServiceNow tickets from within a django project.
 
 Installation
