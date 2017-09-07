@@ -1,6 +1,6 @@
 import os
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 # allow setup.py to be run from any path
@@ -20,7 +20,7 @@ setup(
     license='MIT',
     description='Django package for creation of ServiceNow Tickets',
     long_description=README,
-    packages=['django_snow'],
+    packages=find_packages(),
     include_package_data=True,
     url='https://github.com/godaddy/django-snow',
     download_url='https://github.com/godaddy/django-snow/archive/master.tar.gz',
