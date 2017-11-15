@@ -98,6 +98,17 @@ class TestChangeRequestHandler(TestCase):
 
         mock_update_request.assert_called_with('some change order', {'state': ChangeRequest.TICKET_STATE_COMPLETE})
 
+    @mock.patch('django_snow.helpers.snow_request_handler.ChangeRequestHandler.update_change_request')
+    def test_close_change_request_with_error(self, mock_update_request, mock_pysnow):
+        mock_update_request.return_value = 'foo'
+        change_request_handler = ChangeRequestHandler()
+        payload = {'description': 'foo'}
+        change_request_handler.close_change_request_with_error('some change order', payload)
+
+        mock_update_request.assert_called_with(
+            'some change order', {'state': ChangeRequest.TICKET_STATE_COMPLETE_WITH_ERRORS, 'description': 'foo'}
+        )
+
     def test_update_change_request(self, mock_pysnow):
         fake_query = mock.MagicMock()
         fake_change_order = mock.MagicMock()

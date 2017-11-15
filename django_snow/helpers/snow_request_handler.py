@@ -64,6 +64,13 @@ class ChangeRequestHandler:
         payload = {'state': ChangeRequest.TICKET_STATE_COMPLETE}
         self.update_change_request(change_request, payload)
 
+    def close_change_request_with_error(self, change_request, payload):
+        """
+        Mark the change request as completed with error
+        """
+        payload['state'] = ChangeRequest.TICKET_STATE_COMPLETE_WITH_ERRORS
+        self.update_change_request(change_request, payload)
+
     def update_change_request(self, change_request, payload):
         """
         Update the change request with the data from the kwargs
