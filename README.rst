@@ -68,7 +68,7 @@ Creation
         change_request = co_handler.create_change_request('Title', 'Description', 'assignment_group')
 
 
-Updation
+Updating
 --------
 ``ChangeRequestHandler.update_change_request`` method signature:
 
@@ -117,6 +117,32 @@ Closing
 
         co_handler.close_change_request(change_request)
 
+Closing with error
+------------------
+``ChangeRequestHandler.close_change_request_with_error`` method signature:
+
+**Parameters**
+
+* ``change_request`` - The ``ChangeRequest`` Model representing the Change Order to be closed with error
+* ``payload`` - The payload to pass to the ServiceNow REST API.
+
+**Example**
+
+.. code-block:: python
+
+    from django_snow.models import ChangeRequest
+    from django_snow.helpers import ChangeRequestHandler
+
+    def change_data(self):
+        change_request = ChangeRequest.objects.filter(...)
+        co_handler = ChangeRequestHandler()
+
+        payload = {
+                    'description': 'updated description',
+                    'title': 'foo'
+                  }
+
+        co_handler.close_change_request_with_error(change_request, payload)
 
 Models
 ======

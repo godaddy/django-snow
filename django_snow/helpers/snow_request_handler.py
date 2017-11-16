@@ -58,19 +58,38 @@ class ChangeRequestHandler:
         return change_request
 
     def close_change_request(self, change_request):
-        """
-        Mark the change request as completed
-        """
+        """Mark the change request as completed."""
+
         payload = {'state': ChangeRequest.TICKET_STATE_COMPLETE}
         self.update_change_request(change_request, payload)
 
-    def update_change_request(self, change_request, payload):
+    def close_change_request_with_error(self, change_request, payload):
+        """Mark the change request as completed with error.
+
+        The possible keys for the payload are:
+            * `title`
+            * `description`
+
+        :param change_request: The change request to be closed
+        :type change_request: :class:`django_snow.models.ChangeRequest`
+        :param payload: A dict of data to be updated while closing change request
+        :type payload: dict
         """
-        Update the change request with the data from the kwargs
-        The possible values for the kwargs keys are :
+        payload['state'] = ChangeRequest.TICKET_STATE_COMPLETE_WITH_ERRORS
+        self.update_change_request(change_request, payload)
+
+    def update_change_request(self, change_request, payload):
+        """Update the change request with the data from the kwargs.
+
+        The possible keys for the payload are:
             * `title`
             * `description`
             * `state`
+
+        :param change_request: The change request to be updated
+        :type change_request: :class:`django_snow.models.ChangeRequest`
+        :param payload: A dict of data to be updated while updating the change request
+        :type payload: dict
         """
         client = self._get_client()
 
