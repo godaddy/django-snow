@@ -36,12 +36,12 @@ after_success: coverage combine && codecov
 branches:
   only:
   - master
-  - "/^v?\\d+\\.\\d+(\\.\\d+)?(-\\S*)?$/"
+  - /^v?\d+\.\d+(\.\d+)?(-\S*)?$/
 deploy:
   provider: pypi
   user: jwilhelm
   password:
-    secure: NdXz++qJySSRCOS8HSgapo9t07a4We5U5Jtb7CLKMgraepJTw2mlqTq1+KlHNrUsI7Q+SfxAvpIOopNTlwDlj6Y9ppvThuTFrx3l2XQdfrnV4Lzy7VVKrEEAhCsp9gxJ7NkREBcaqP9z9tVl/mzJCKsZhnVNawVli/wifWXZ3GADgA9W8UqEn75BPUMXtO8eozRCPPKXFb5ZDD7y6YHwJAa36WifQZJmrPWzj4FEMTrvSV7AmQ0HJNw2p1aXr5GE1mW05k3DAsEHmaQVm3s0+ajfF1UVX1ijccKZEtXbzxuW+2cICyF+dMwduj/aVihlI7VBdzBhRK5NJ6FyNnCroJTfA2Oei42AmyIN9SVb17hYbIGnQ7YPGspQlG1Pj+qLS0EVMK3a8p6TQatG7qAlKRoNqRiFEJwGL5TYrJDAagI2ysYMHkJLO67F7TzTY2KHRMCYDsCv2CIlUKkZZNXikb4C/3M9o1EMOv613P9PS1hD5AS0wGpqFdFYlJEQC1unKIsOed8ofWz6JjelXCM+tfF8MOsTmy1o4vPtpymOyBiWJjd2DHgsCZXnwHXXzqrpwowjJHvgs8p5Dajv/QbfCa3/iaC+W3d8TsWoumcbJrnTaWMjvOT06XTOvwtAaDXgE8gLkTt6fYtW6o+q8T3GwenDG1iAi51iX+3L5nwG4ks=
+    secure: LzZk5DWafy6kZR//EH6iFsozmXVyAu86uuLKg0A82rLJBEV/ajLsbcLIk/G2FQdELs+s//6+v34r9PxeUbYE6xcb7hL+JF/dNotDnWG/AoCDD+xfHQqsIXUUnDbkTzm2a/d/QnC+3di6rnHzJlRSPX2wT2w6pHcQGbSE2bwOjHUe+apNWy7mImG9dF43nBEy16ihD2enEF+GVBe4SHl6eI9neqJWlHIUbMPG2LR/Nuo19AQCNfs9cFVwCNXWEhK+DY0PvMW/xnnYb/QxQcmgd9HtjC+I4ahj2Ggx0xkFaOjVmcIjFkxQj/ZQUxhYm0vJjrP43vSNUmzgfBdITnRvvJfS7bz+NZX9gx058XaazzyX7BWA/kSdJUq3DpoeTCaYzQrzi/DKgf0ox7jfQx9HvwMCSkel6Xf0K5YM3kylW/EhANbXDI4irtHUoU0BVQbXGKITgRtGbNL4zNUq60LwM7jpgFTVlzl+Fz5EAGqpVTuZtKiaPRNfYJorrQgtGG7ekFMDd1LP9UZ5hKTUAO7m5IPAcnUcLTT6BEXKbQSCz+kRj+F1nwZH6E4K90FKMaW/2opt2v5kyXsgli5ysrKmwfcXyhntxzr2eLTg75tMoJW1w5b7EJ7UY8b9JUAGiCVQCheFAIGaoL7UwBb0C1DHUm3l4nOaTlYwmaDOivT5jS8=
   on:
     tags: true
     python: 3.6
