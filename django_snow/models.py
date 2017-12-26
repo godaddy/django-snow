@@ -7,6 +7,10 @@ class ChangeRequest(models.Model):
     SNow Change Request Model Class.
     """
 
+    # TODO: Review the states to be included by default. Some are used only in legacy instances (Geneva and before),
+    # and some are used only in later instances.
+    # https://docs.servicenow.com/bundle/kingston-it-service-management/page/product/change-management/task/state-model-activate-tasks.html
+
     # The state of the Change Request
     TICKET_STATE_OPEN = '1'
     TICKET_STATE_IN_PROGRESS = '2'
@@ -47,9 +51,21 @@ class ChangeRequest(models.Model):
     )
 
     state = models.CharField(
-        max_length=max([len(x[0]) for x in TICKET_STATE_CHOICES]),
+        max_length=3,  # TODO: Review this decision.
         choices=TICKET_STATE_CHOICES,
-        help_text='The current state the the change order is in.'
+        help_text='The current state the change order is in.'
+    )
+
+    # The time at which the Change Request was created.
+    created_time = models.DateTimeField(
+        auto_now_add=True,
+        help_text='Timestamp when the Change Request was created'
+    )
+
+    # The time at which the Change Request was closed.
+    closed_time = models.DateTimeField(
+        null=True,
+        help_text='Timestamp when the Change Request was closed'
     )
 
     def __str__(self):
