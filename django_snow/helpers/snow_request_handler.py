@@ -28,13 +28,23 @@ class ChangeRequestHandler:
         self.snow_instance = settings.SNOW_INSTANCE
         self.snow_api_user = settings.SNOW_API_USER
         self.snow_api_pass = settings.SNOW_API_PASS
+        self.snow_assignment_group = getattr(settings, 'SNOW_ASSIGNMENT_GROUP', None)
+        self.snow_default_cr_type = getattr(settings, 'SNOW_DEFAULT_CHANGE_TYPE', 'standard')
 
-    def create_change_request(self, payload):
+    def create_change_request(self, title, description, assignment_group=None, payload=None):
         """
         Create a change request with the given payload.
         """
         client = self._get_client()
         change_requests = client.resource(api_path=self.CHANGE_REQUEST_TABLE_PATH)
+        payload = payload or {}
+        payload['short_description'] = title
+        payload['description'] = description
+
+        if 'type' not in payload:
+            payload['type'] = self.snow_default_cr_type
+        if 'assignment_group' not in payload:
+            payload['assignment_group'] = self.get_snow_group_guid(assignment_group or self.snow_assignment_group)
 
         try:
             result = change_requests.create(payload=payload)
