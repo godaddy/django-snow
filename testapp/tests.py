@@ -1,5 +1,4 @@
 import uuid
-from collections import OrderedDict
 
 from django.test import TestCase, override_settings
 from requests.exceptions import HTTPError
@@ -27,6 +26,9 @@ class TestChangeRequestHandler(TestCase):
     def setUp(self):
         self.mock_pysnow_client = mock.MagicMock()
         self.change_request_handler = ChangeRequestHandler()
+
+    def tearDown(self):
+        self.change_request_handler.clear_group_guid_cache()
 
     def test__get_client(self, mock_pysnow):
         mock_pysnow.Client.return_value = self.mock_pysnow_client
@@ -80,11 +82,12 @@ class TestChangeRequestHandler(TestCase):
         self.assertEqual(co.assignment_group_guid, fake_insert_retval['assignment_group']['value'])
 
     def test_create_change_request_parameters(self, mock_pysnow):
-        expected_payload = OrderedDict()
-        expected_payload['type'] = 'normal'
-        expected_payload['assignment_group'] = 'bar'
-        expected_payload['short_description'] = 'Title'
-        expected_payload['description'] = 'Description'
+        expected_payload = {
+            'type': 'normal',
+            'assignment_group': 'bar',
+            'short_description': 'Title',
+            'description': 'Description'
+        }
 
         fake_insert_retval = {
             'sys_id': uuid.uuid4(),
@@ -100,20 +103,20 @@ class TestChangeRequestHandler(TestCase):
         self.mock_pysnow_client.resource.return_value = fake_resource
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
-        payload = OrderedDict()
-        payload['type'] = 'normal'
-        payload['assignment_group'] = 'bar'
+        payload = {
+            'type': 'normal',
+            'assignment_group': 'bar'
+        }
         self.change_request_handler.create_change_request('Title', 'Description', None, payload=payload)
         fake_resource.create.assert_called_with(payload=expected_payload)
 
     def test_create_change_request_default_parameters(self, mock_pysnow):
-        expected_payload = OrderedDict()
-        expected_payload['short_description'] = 'Title'
-        expected_payload['description'] = 'Description'
-        expected_payload['type'] = 'standard'
-        expected_payload['assignment_group'] = 'bar'
-
-        self.change_request_handler.group_guid_dict['assignment_group'] = 'bar'
+        expected_payload = {
+            'short_description': 'Title',
+            'description': 'Description',
+            'type': 'standard',
+            'assignment_group': 'bar'
+        }
 
         fake_insert_retval = {
             'sys_id': uuid.uuid4(),
@@ -125,11 +128,17 @@ class TestChangeRequestHandler(TestCase):
         }
 
         fake_resource = mock.MagicMock()
+
+        # For Assignment Group GUID
+        fake_asgn_group_guid_response = mock.MagicMock()
+        fake_asgn_group_guid_response.one.return_value = {'sys_id': 'bar'}
+        fake_resource.get.return_value = fake_asgn_group_guid_response
+
         fake_resource.create.return_value = fake_insert_retval
         self.mock_pysnow_client.resource.return_value = fake_resource
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
-        self.change_request_handler.create_change_request('Title', 'Description', None, payload=OrderedDict())
+        self.change_request_handler.create_change_request('Title', 'Description', None, payload={})
         fake_resource.create.assert_called_with(payload=expected_payload)
 
     def test_create_change_request_raises_exception_for_http_error(self, mock_pysnow):
@@ -144,7 +153,7 @@ class TestChangeRequestHandler(TestCase):
         self.mock_pysnow_client.resource.return_value = fake_resource
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
-        with self.assertRaises(ChangeRequestException):
+        with self.assertRaisesRegex(ChangeRequestException, 'Could not create change request due to.*'):
             self.change_request_handler.create_change_request('Title', 'Description', None, payload={})
 
     def test_create_change_request_raises_exception_when_error_in_result(self, mock_pysnow):
@@ -158,7 +167,7 @@ class TestChangeRequestHandler(TestCase):
         self.mock_pysnow_client.resource.return_value = fake_resource
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
-        with self.assertRaises(ChangeRequestException):
+        with self.assertRaisesRegex(ChangeRequestException, 'Could not create change request due to.*'):
             self.change_request_handler.create_change_request('Title', 'Description', None, payload={})
 
     @mock.patch('django_snow.helpers.snow_request_handler.ChangeRequestHandler.update_change_request')
@@ -219,7 +228,7 @@ class TestChangeRequestHandler(TestCase):
         self.mock_pysnow_client.resource.return_value = fake_resource
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
-        with self.assertRaises(ChangeRequestException):
+        with self.assertRaisesRegex(ChangeRequestException, 'Could not update change request due to '):
             self.change_request_handler.update_change_request(fake_change_order, payload='{"foo": "bar"}')
 
     def test_update_change_request_raises_exception_for_error_in_result(self, mock_pysnow):
@@ -230,12 +239,23 @@ class TestChangeRequestHandler(TestCase):
         self.mock_pysnow_client.resource.return_value = fake_resource
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
-        with self.assertRaises(ChangeRequestException):
+        with self.assertRaisesRegex(ChangeRequestException, 'Could not update change request due to '):
             self.change_request_handler.update_change_request(fake_change_order, payload='{"foo": "bar"}')
 
     def test_get_snow_group_guid_cached_result(self, mock_pysnow):
-        self.change_request_handler.group_guid_dict['foo'] = 'bar'
-        self.assertEqual(self.change_request_handler.get_snow_group_guid('foo'), 'bar')
+        fake_resource = mock.MagicMock()
+        fake_response = mock.MagicMock()
+        fake_response.one.return_value = {'sys_id': 'bar'}
+        fake_resource.get.return_value = fake_response
+        self.mock_pysnow_client.resource.return_value = fake_resource
+        mock_pysnow.Client.return_value = self.mock_pysnow_client
+
+        self.change_request_handler.get_snow_group_guid('foo')
+        cached_guid = self.change_request_handler.get_snow_group_guid('foo')
+
+        # resource.get() should be called only once, since the value from previous call should have been cached.
+        fake_resource.get.assert_called_once_with(query={'name': 'foo'})
+        self.assertEqual(cached_guid, 'bar')
 
     def test_get_snow_group_guid(self, mock_pysnow):
         fake_resource = mock.MagicMock()
@@ -246,3 +266,20 @@ class TestChangeRequestHandler(TestCase):
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
         self.assertEqual(self.change_request_handler.get_snow_group_guid('hello'), 'yo')
+
+    def test_clear_snow_group_guid_cache(self, mock_pysnow):
+        fake_resource = mock.MagicMock()
+        fake_response = mock.MagicMock()
+        fake_response.one.return_value = {'sys_id': 'some_id'}
+        fake_resource.get.return_value = fake_response
+        self.mock_pysnow_client.resource.return_value = fake_resource
+        mock_pysnow.Client.return_value = self.mock_pysnow_client
+
+        self.change_request_handler.get_snow_group_guid('hello')
+        self.change_request_handler.get_snow_group_guid('hello')
+        self.assertEqual(fake_resource.get.call_count, 1)
+
+        self.change_request_handler.clear_group_guid_cache()
+        self.change_request_handler.get_snow_group_guid('hello')
+        self.change_request_handler.get_snow_group_guid('hello')
+        self.assertEqual(fake_resource.get.call_count, 2)

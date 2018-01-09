@@ -148,3 +148,9 @@ class ChangeRequestHandler:
             self.group_guid_dict[group_name] = result['sys_id']
 
         return self.group_guid_dict[group_name]
+
+    def clear_group_guid_cache(self):
+        """
+        Clear the SNow Group Name - GUID cache.
+        """
+        self.group_guid_dict.clear()
