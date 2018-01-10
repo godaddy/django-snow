@@ -26,7 +26,8 @@ setup(
     download_url='https://github.com/godaddy/django-snow/archive/master.tar.gz',
     install_requires=[
         'Django>=1.8',
-        'pysnow>=0.6.4'
+        'pysnow>=0.6.4',
+        'six'
     ],
 
     classifiers=[

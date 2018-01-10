@@ -1,5 +1,6 @@
 import uuid
 
+import six
 from django.test import TestCase, override_settings
 from requests.exceptions import HTTPError
 
@@ -153,7 +154,7 @@ class TestChangeRequestHandler(TestCase):
         self.mock_pysnow_client.resource.return_value = fake_resource
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
-        with self.assertRaisesRegex(ChangeRequestException, 'Could not create change request due to.*'):
+        with six.assertRaisesRegex(self, ChangeRequestException, 'Could not create change request due to.*'):
             self.change_request_handler.create_change_request('Title', 'Description', None, payload={})
 
     def test_create_change_request_raises_exception_when_error_in_result(self, mock_pysnow):
@@ -167,7 +168,7 @@ class TestChangeRequestHandler(TestCase):
         self.mock_pysnow_client.resource.return_value = fake_resource
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
-        with self.assertRaisesRegex(ChangeRequestException, 'Could not create change request due to.*'):
+        with six.assertRaisesRegex(self, ChangeRequestException, 'Could not create change request due to.*'):
             self.change_request_handler.create_change_request('Title', 'Description', None, payload={})
 
     @mock.patch('django_snow.helpers.snow_request_handler.ChangeRequestHandler.update_change_request')
@@ -228,7 +229,7 @@ class TestChangeRequestHandler(TestCase):
         self.mock_pysnow_client.resource.return_value = fake_resource
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
-        with self.assertRaisesRegex(ChangeRequestException, 'Could not update change request due to '):
+        with six.assertRaisesRegex(self, ChangeRequestException, 'Could not update change request due to '):
             self.change_request_handler.update_change_request(fake_change_order, payload='{"foo": "bar"}')
 
     def test_update_change_request_raises_exception_for_error_in_result(self, mock_pysnow):
@@ -239,7 +240,7 @@ class TestChangeRequestHandler(TestCase):
         self.mock_pysnow_client.resource.return_value = fake_resource
         mock_pysnow.Client.return_value = self.mock_pysnow_client
 
-        with self.assertRaisesRegex(ChangeRequestException, 'Could not update change request due to '):
+        with six.assertRaisesRegex(self, ChangeRequestException, 'Could not update change request due to '):
             self.change_request_handler.update_change_request(fake_change_order, payload='{"foo": "bar"}')
 
     def test_get_snow_group_guid_cached_result(self, mock_pysnow):
