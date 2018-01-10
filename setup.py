@@ -27,7 +27,9 @@ setup(
     install_requires=[
         'Django>=1.8',
         'pysnow>=0.6.4',
-        'six'
+    ],
+    tests_require=[
+        'six',
     ],
 
     classifiers=[
