@@ -32,6 +32,8 @@ Configuration
 * ``SNOW_ASSIGNMENT_GROUP`` (Optional) - The group to which the tickets should be assigned.
   If this is not provided, each call to create the tickets should be provided with an `assignment_group` argument.
   See the API documentation for more details
+* ``SNOW_DEFAULT_CHANGE_TYPE`` (Optional) - Default Change Request Type. If not provided,
+  `standard` will considered as the default type.
 
 Usage
 =====
@@ -44,14 +46,9 @@ Creation
 
 * ``title`` - The title of the change request
 * ``description`` - The description of the change request
-* ``co_type`` (Optional) - One of the following:
-
-  * ``Automated`` (Default)
-  * ``Manual``
-  * ``Emergency``
-
 * ``assignment_group`` - The group to which the change request is to be assigned.
   This is **optional** if ``SNOW_ASSIGNMENT_GROUP`` django settings is available, else, it is **mandatory**
+* ``payload`` (Optional) - The payload for creating the Change Request.
 
 **Returns**
 
