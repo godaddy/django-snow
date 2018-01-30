@@ -1,0 +1,7 @@
+Version 1.2.0 - Mon Jan 29, 2018
+- Fixed #1: Store the open and close time for a CO
+- Enhancements to the way the SNow API is utilized
+
+Version 1.1.0 - Thu Nov 16, 2017
+- Updated docs
+- Add a method to close a CO with errors
