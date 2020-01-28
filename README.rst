@@ -1,5 +1,9 @@
-django-snow
+DEPRECATED
 =================
+
+.. image:: http://unmaintained.tech/badge.svg
+   :target: http://unmaintained.tech
+   :alt: No Maintenance Intended
 
 .. image:: https://img.shields.io/pypi/v/django-snow.svg
    :target: https://pypi.python.org/pypi/django-snow
@@ -14,6 +18,9 @@ django-snow
    :alt: Code coverage
 
 **django-snow** is a django app to manage ServiceNow tickets from within a django project.
+
+  This project is no longer maintained, and is welcoming new maintainers. If you would like to take over development of this project, please contact oss@godaddy.com.
+
 
 Installation
 ============
